@@ -23,14 +23,17 @@ OLinuXino GPIO Web Interface
 
   
   And add php configuration to mod_fastcgi :  
-                fastcgi.server = ( ".php" => ((
-                     "bin-path" => "/usr/bin/php-cgi",
-                     "socket" => "/tmp/php.socket"
-                 )))
+                  
+                  fastcgi.server = ( ".php" => ((
+                         "bin-path" => "/usr/bin/php-cgi",
+                        "socket" => "/tmp/php.socket"
+                      )))
 
 
    Restart  lighttpd :
+              
               root@olinuxino:~# /etc/init.d/lighttpd restart
+    
     now you must have working php.    
 1.2 Installing OLinuXino Web IO
     
