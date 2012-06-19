@@ -36,17 +36,17 @@ I Installing
     
     now you must have working php.    
 2 Installing OLinuXino Web IO
-    Get olinuxino-web-io sources :
+  Get olinuxino-web-io sources :
   
-  git clone https://github.com/hehopmajieh/olinuxino-web-io.git
+       git clone https://github.com/hehopmajieh/olinuxino-web-io.git
   
   Install GPIO init script :
   
-  cd oliniuxino-web-io/init
-  update-rc.d gpio defaults
+      cd oliniuxino-web-io/init
+      update-rc.d gpio defaults
   
   Copy oplinuxino-web-io files to www root directory :
-  cp -a oliniuxino-web-io/web/* /www/pages
+      cp -a oliniuxino-web-io/web/* /www/pages
   
   To view GPIO pins refer to olinuxino oficial documentation :)
   
