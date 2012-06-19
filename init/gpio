@@ -1,0 +1,75 @@
+#! /bin/sh
+# /etc/init.d/gpio
+#
+
+# Some things that run always
+touch /var/lock/gpio
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+  start)
+    echo "Starting script gpio "
+    echo "out" > /sys/class/gpio/gpio0/direction
+	echo "out" > /sys/class/gpio/gpio1/direction
+	echo "out" > /sys/class/gpio/gpio2/direction
+	echo "out" > /sys/class/gpio/gpio3/direction
+	echo "out" > /sys/class/gpio/gpio4/direction
+	echo "out" > /sys/class/gpio/gpio5/direction
+	echo "out" > /sys/class/gpio/gpio6/direction
+	echo "out" > /sys/class/gpio/gpio7/direction
+	echo "out" > /sys/class/gpio/gpio16/direction
+	echo "out" > /sys/class/gpio/gpio23/direction
+	echo "out" > /sys/class/gpio/gpio25/direction
+	echo "out" > /sys/class/gpio/gpio51/direction
+	echo "out" > /sys/class/gpio/gpio52/direction
+	echo "out" > /sys/class/gpio/gpio53/direction
+	echo "out" > /sys/class/gpio/gpio91/direction
+	echo "out" > /sys/class/gpio/gpio92/direction
+
+	chmod 666 /sys/class/gpio/gpio0/value
+	chmod 666 /sys/class/gpio/gpio1/value
+	chmod 666 /sys/class/gpio/gpio2/value
+	chmod 666 /sys/class/gpio/gpio3/value
+	chmod 666 /sys/class/gpio/gpio4/value
+	chmod 666 /sys/class/gpio/gpio5/value
+	chmod 666 /sys/class/gpio/gpio6/value
+	chmod 666 /sys/class/gpio/gpio7/value
+	chmod 666 /sys/class/gpio/gpio16/value
+	chmod 666 /sys/class/gpio/gpio23/value
+	chmod 666 /sys/class/gpio/gpio25/value
+	chmod 666 /sys/class/gpio/gpio51/value
+	chmod 666 /sys/class/gpio/gpio52/value
+	chmod 666 /sys/class/gpio/gpio53/value
+	chmod 666 /sys/class/gpio/gpio91/value
+	chmod 666 /sys/class/gpio/gpio92/value
+
+	chmod 666 /sys/class/gpio/gpio0/direction
+	chmod 666 /sys/class/gpio/gpio1/direction
+	chmod 666 /sys/class/gpio/gpio2/direction
+	chmod 666 /sys/class/gpio/gpio3/direction
+	chmod 666 /sys/class/gpio/gpio4/direction
+	chmod 666 /sys/class/gpio/gpio5/direction
+	chmod 666 /sys/class/gpio/gpio6/direction
+	chmod 666 /sys/class/gpio/gpio7/direction
+	chmod 666 /sys/class/gpio/gpio16/direction
+	chmod 666 /sys/class/gpio/gpio23/direction
+	chmod 666 /sys/class/gpio/gpio25/direction
+	chmod 666 /sys/class/gpio/gpio51/direction
+	chmod 666 /sys/class/gpio/gpio52/direction
+	chmod 666 /sys/class/gpio/gpio53/direction
+	chmod 666 /sys/class/gpio/gpio91/direction
+	chmod 666 /sys/class/gpio/gpio92/direction
+
+    ;;
+  stop)
+    echo "Stopping script gpio"
+    echo "Nothing to stop"
+    ;;
+  *)
+    echo "Usage: /etc/init.d/gpio {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0
+
