@@ -3,8 +3,8 @@ olinuxino-web-io
 
 OLinuXino GPIO Web Interface
 
-1. Installing
-1.1 lighttpd + mod_fastcgi + php-cgi
+I Installing
+1 lighttpd + mod_fastcgi + php-cgi
   To use olinuxino-web-io , you need web server and php installed.
   I use lighttpd + mod_fastcgi + php-cgi from Angstrom feeds.
   Sample  lighttpd configuration : 
@@ -35,8 +35,21 @@ OLinuXino GPIO Web Interface
               root@olinuxino:~# /etc/init.d/lighttpd restart
     
     now you must have working php.    
-1.2 Installing OLinuXino Web IO
-    
+2 Installing OLinuXino Web IO
+    Get olinuxino-web-io sources :
   
+  git clone https://github.com/hehopmajieh/olinuxino-web-io.git
+  
+  Install GPIO init script :
+  
+  cd oliniuxino-web-io/init
+  update-rc.d gpio defaults
+  
+  Copy oplinuxino-web-io files to www root directory :
+  cp -a oliniuxino-web-io/web/* /www/pages
+  
+  To view GPIO pins refer to olinuxino oficial documentation :)
+  
+  HeHoPMaJIeH <hehopmajieh@debian.bg>
   
                 
