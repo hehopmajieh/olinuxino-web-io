@@ -46,6 +46,7 @@ I Installing
       update-rc.d gpio defaults
   
   Copy oplinuxino-web-io files to www root directory :
+     
       cp -a oliniuxino-web-io/web/* /www/pages
   
   To view GPIO pins refer to olinuxino oficial documentation :)
