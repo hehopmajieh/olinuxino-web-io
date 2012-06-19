@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="de-de" xmlns="http://www.w3.org/1999/xhtml" lang="de-de">
+<head>
+	<script type="text/javascript" src="common.js"></script>
+	<script type="text/javascript" src="http-request.js"></script>
+	<script type="text/javascript" src="json2.js"></script>
+	<script type="text/javascript" src="timer.js"></script>
+	<style>body { font-family: Arial; }</style>
+	<title>Olinuxino GPIO Web Test/o</title>
+	
+<script type="text/javascript">
+window.onload = function() {
+	
+	var ledimg = ["LED_off.png", "LED_on.png"];
+	
+	//object prototype for a GPIO
+	function GpioPin(bit) {
+		this.bit = bit;
+		this.direction = false; //output
+		this.val = false;
+		
+		this.inimg = null;
+		this.dirctn = null;
+	}
+	
+	GpioPin.prototype = {
+		MakeRow : function() {
+			//oThis is used for a little trick - in the onclick-event this is set to the current element.
+			//oThis is a kind of injection of the GpioPin-object to that event without "poisoning" the target element with the pointer
+			var oThis = this;
+			
+			//create a new row
+			var row = d.ac(tbody, d.ce("tr"));
+			
+			d.ac(d.ac(row, d.ce("td")), d.ctn("GPIO" + this.bit));
+			//create textnode for direction and insert it into a <span> - onclick-events can't be assigned to textnodes
+			this.dirctn = d.ctn("Output");
+			var dircont = d.ac(d.ac(row, d.ce("td")), d.ac1(d.ce("span"), this.dirctn));
+			dircont.onclick = function() { oThis.ToggleDir(); };
+			dircont.style.cursor = "default";
+			
+			//image vor the value
+			this.valimg = d.ac(d.ac(row, d.ce("td")), d.ce("img"));
+			objSetAttr(this.valimg, {"src" : ledimg[0], "width" : 16, "height" : 16, "onclick" : function() { oThis.ToggleOut(); }});
+			
+			return row;
+		},
+		ToggleDir : function() {
+			//change direction and send it to the pi
+			this.dir = !this.dir;
+			this.dirctn.nodeValue = (this.dir == false) ? "Output" : "Input";
+			new HTTPRequest().post("write.php", { "bit" : this.bit, "setdir" : this.dir ? "i" : "o" }, function() {}, false);
+		},
+		ToggleOut : function() {
+			//change value and send it to the pi	
+			this.val = !this.val;
+			this.valimg.src = ledimg[(this.val == true) ? 1 : 0];
+			new HTTPRequest().post("write.php", { "bit" : this.bit, "setval" : this.val ? 1 : 0 }, function() {}, false);
+		},
+		SetVals : function(dir, val) {
+			//apply direction & value received from the pi
+			this.dir = dir;
+			this.val = val;
+			this.dirctn.nodeValue = this.dir == false ? "Output" : "Input";
+			this.valimg.src = ledimg[this.val == true ? 1 : 0];
+		}
+	}
+	
+	//bits for the used GPIOs. If you want to control more, just add them here (and in read.php) 
+	var gpios = [0 ,1, 2 ,3 ,4 ,5 ,6 ,7 ,16 ,23 ,25 ,51 ,52 ,53 ,91 ,92 ];
+	
+	//create table
+	var table = d.ac(d.ebi("container"), d.ce("table"));
+	var thead = d.ac(table, d.ce("thead"));
+	var tbody = d.ac(table, d.ce("tbody"));
+	
+	//create table header
+	var heads = ["Pin", "Direction", "Value"];
+	for(var x = 0; x < heads.length; x++) {
+		d.ac(thead, d.ac1(d.ce("th"), d.ctn(heads[x])));
+	}
+	
+	//storage for the GpioPin-objects
+	var pins = [];
+	
+	//create a objects and populate the table
+	for(var x = 0; x < gpios.length; x++) {
+		pins[x] = new GpioPin(gpios[x]);
+		d.ac(tbody, pins[x].MakeRow());
+	}
+	
+	//xhr-object for the refresh
+	var readXhr = new HTTPRequest();
+	
+	function Refresh() {
+		readXhr.get("read.php", [], { "end" : function(a) {
+		
+			//parse the received data
+			data = JSON.parse(a.responseText);
+			
+			//find the corresponding object
+			for(var x = 0; x < data.length; x++) {
+				for(var y = 0; y < pins.length; y++) {
+					if(pins[y].bit == data[x].bit) {
+						//and apply the data
+						var dir = data[x].dir == "i" ? true : false;
+						pins[y].SetVals(dir, data[x].val == 1);
+						break;
+					}
+				}
+			}
+		}}, false);
+	}
+	
+	//auto refresh-timer
+	var tmr = new Timer(1000, function() { Refresh(); });
+	
+	//control for auto refresh
+	var cbAutoRefresh = d.ac(d.ebi("container"), d.ce("input"));
+	cbAutoRefresh.type = "checkbox";
+	cbAutoRefresh.id = "autoRefresh"
+	cbAutoRefresh.onclick = function() { 
+		if(this.checked === true) {
+			tmr.Start();
+		} else {
+			tmr.Stop();
+		}
+	};
+	
+	var lbl = d.ac(d.ebi("container"), d.ce("label"))
+	lbl.htmlFor = cbAutoRefresh.id;
+	d.ac(lbl, d.ctn("Auto Refresh"));
+	
+	//manual refresh
+	var btn = d.ac(d.ebi("container"), d.ce("input"))
+	btn.type = "button";
+	btn.value = "Refresh";
+	btn.onclick = function() { Refresh(); };
+	
+	//finally, an initial refresh to give the buttons an initial state
+	Refresh();
+}
+
+</script>
+</head>
+<body>
+<div id="container"></div>
+</body>
+</html>
