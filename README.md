@@ -1,7 +1,7 @@
 olinuxino-web-io
 ================
 
-OLinuXino GPIO Web Interface
+-OLinuXino GPIO Web Interface-
 
 I Installing
 1 lighttpd + mod_fastcgi + php-cgi
